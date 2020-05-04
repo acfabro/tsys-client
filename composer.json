@@ -1,0 +1,31 @@
+{
+  "name": "acfabro/tsys-client",
+  "version": "1.0.0",
+  "description": "A client lib for TSYS Genius, MerchantWare",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "acfabro",
+      "email": "acfabro@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Acfabro\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AcfabroTests\\": "tests/"
+    }
+  },
+  "require": {
+    "adbario/php-dot-notation": "^2.2",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "vlucas/phpdotenv": "^4.1",
+    "phpunit/phpunit": "^9.1"
+  }
+}
