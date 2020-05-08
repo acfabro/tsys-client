@@ -180,6 +180,8 @@ class TransportRequest
 
             $this->$key = $value;
         }
+
+        $this->EntryMode = 'Undefined';
     }
 
     /**

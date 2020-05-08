@@ -68,13 +68,24 @@ class Client implements ClientInterface
         ];
 
         // make the transport and send
-        $result = $transport->call('CreateTransaction', $payload);
-        if (!empty($result->CreateTransactionResult)) {
-            $this->transportKey = new TransportKey((array)$result->CreateTransactionResult);
-            return $this->transportKey;
+        try {
+            $result = $transport->call('CreateTransaction', $payload);
+            if (!empty($result->CreateTransactionResult) && !empty($result->CreateTransactionResult->TransportKey)) {
+                $this->log('debug', "CreateTransaction request: " . $transport->lastRequest());
+                $this->log('debug', "CreateTransaction response: " . $transport->lastResponse());
+                $this->log('debug', "CreateTransaction result: " . var_export($result, true));
+                $this->transportKey = new TransportKey((array)$result->CreateTransactionResult);
+                return $this->transportKey;
+            } else {
+                throw new \Exception("CreateTransaction returns invalid response: " . var_export($result, true));
+            }
+        } catch (\Exception $e) {
+            $this->log('debug', "CreateTransaction request: " . $transport->lastRequest());
+            $this->log('debug', "CreateTransaction response: " . $transport->lastResponse());
+            $this->log('warning', "CreateTransaction invalid result: " . var_export($result, true));
+            throw new TransactionException("CreateTransaction invalid result: " . var_export($result, true));
         }
 
-        throw new TransactionException("CreateTransaction invalid result: " . var_export($result, true));
     }
 
     /**

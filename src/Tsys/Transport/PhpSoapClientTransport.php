@@ -76,4 +76,16 @@ class PhpSoapClientTransport implements TransportInterface
         }
     }
 
+    public function lastRequest($asString = false)
+    {
+        if ($asString) return var_export($this->transport->__getLastRequest(), true);
+        return $this->transport->__getLastRequest();
+    }
+
+    public function lastResponse($asString = false)
+    {
+        if ($asString) return var_export($this->transport->__getLastResponse(), true);
+        return $this->transport->__getLastResponse();
+    }
+
 }

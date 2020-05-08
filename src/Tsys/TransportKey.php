@@ -13,17 +13,17 @@ class TransportKey
     /**
      * @var string
      */
-    private $TransportKey;
+    public $TransportKey;
 
     /**
      * @var string
      */
-    private $ValidationKey;
+    public $ValidationKey;
 
     /**
      * @var array|null
      */
-    private $Messages;
+    public $Messages;
 
     public function __construct($data)
     {
