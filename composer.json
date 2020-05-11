@@ -2,7 +2,7 @@
   "name": "acfabro/tsys-client",
   "version": "1.0.0",
   "description": "A client lib for TSYS Genius, MerchantWare",
-  "minimum-stability": "stable",
+  "minimum-stability": "alpha",
   "license": "MIT",
   "authors": [
     {
