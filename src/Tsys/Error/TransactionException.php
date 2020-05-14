@@ -4,7 +4,7 @@
 namespace Acfabro\Tsys\Error;
 
 
-use PHPUnit\Framework\Exception;
+use Exception;
 
 class TransactionException extends Exception
 {

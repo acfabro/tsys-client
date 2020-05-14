@@ -25,6 +25,9 @@ class Config
         $this->data = new Dot($config);
     }
 
+    /**
+     * @deprecated
+     */
     public function __get($name)
     {
         return $this->data[$name] ?? null;
@@ -56,9 +59,19 @@ class Config
         }
     }
 
+    public function toArray()
+    {
+        return $this->data;
+    }
+
     public function get($name)
     {
         return $this->data->get($name);
+    }
+
+    public function set($name, $value)
+    {
+        return $this->data->set($name, $value);
     }
 
 }

@@ -20,7 +20,9 @@ interface ClientInterface
      * @param TransportRequest $request Request assoc array
      * @return TransportKey
      */
-    public function geniusStageTransaction(TransportRequest $request);
+    public function stageTransaction(TransportRequest $request);
+    public function voidTransaction(VoidRequest $request);
+    public function detailsByTransportKey(string $transportKey);
 
     /**
      * Send a Sale request to merchantware api

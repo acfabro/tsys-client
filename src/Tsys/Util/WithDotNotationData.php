@@ -43,4 +43,9 @@ trait WithDotNotationData
         return $this->data->set($name, $value);
     }
 
+    public function toArray()
+    {
+        return $this->data->all();
+    }
+
 }

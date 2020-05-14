@@ -4,7 +4,6 @@
 namespace Acfabro\Tsys;
 
 
-use Acfabro\Tsys\Util\EasyObject;
 use Acfabro\Tsys\Util\WithDotNotationData;
 
 /**
