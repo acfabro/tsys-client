@@ -76,4 +76,13 @@ class MerchantCredentials
         $this->MerchantKey = $MerchantKey;
     }
 
+    public function toArray()
+    {
+        return [
+            'MerchantName' => $this->MerchantName,
+            'MerchantSiteId' => $this->MerchantSiteId,
+            'MerchantKey' => $this->MerchantKey,
+        ];
+    }
+
 }

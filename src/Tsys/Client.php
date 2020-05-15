@@ -95,11 +95,7 @@ class Client implements ClientInterface
         $transport = $this->makeTransport($this->config->get('endpoints.credit'));
 
         $payload = [
-            'Credentials' => [
-                'MerchantName' => $this->merchantCredentials->getMerchantName(),
-                'MerchantSiteId' => $this->merchantCredentials->getMerchantSiteId(),
-                'MerchantKey' => $this->merchantCredentials->getMerchantKey(),
-            ],
+            'Credentials' => $this->merchantCredentials->toArray(),
             'Request' => $request->toArray()
         ];
 
@@ -107,7 +103,7 @@ class Client implements ClientInterface
         $this->log('debug', "Calling Void: " . var_export($payload, true));
         try {
             $result = $transport->call('Void', $payload);
-            if (!empty($result->VoidResult) && !empty($result->VoidResult->Token)) {
+            if (!empty($result->VoidResult) && !empty($result->VoidResult->ApprovalStatus)) {
                 $this->log('debug', "VoidResult request: " . $transport->lastRequest());
                 $this->log('debug', "VoidResult: " . $transport->lastResponse());
                 $this->log('debug', "VoidResult result: " . var_export($result, true));
@@ -133,6 +129,42 @@ class Client implements ClientInterface
             'SiteID' => $this->merchantCredentials->getMerchantSiteId(),
             'Key' => $this->merchantCredentials->getMerchantKey(),
             'TransportKey' => $transportKey
+        ];
+
+        // make the transport and send
+        $this->log('debug', "Calling DetailsByTransportKey: " . var_export($payload, true));
+        try {
+            $result = $transport->call('DetailsByTransportKey', $payload);
+            if (!empty($result->DetailsByTransportKeyResult)) {
+                $this->log('debug', "DetailsByTransportKey request: " . $transport->lastRequest());
+                $this->log('debug', "DetailsByTransportKey: " . $transport->lastResponse());
+                $this->log('debug', "DetailsByTransportKey result: " . var_export($result, true));
+                return (array)$result->DetailsByTransportKeyResult;
+            } else {
+                throw new \Exception("DetailsByTransportKey returns invalid response: " . var_export($result, true));
+            }
+        } catch (\Exception $e) {
+            $this->log('debug', "DetailsByTransportKey request: " . $transport->lastRequest());
+            $this->log('debug', "DetailsByTransportKey response: " . $transport->lastResponse());
+            $this->log('warning', "DetailsByTransportKey invalid result: " . var_export($result, true));
+            throw new TransactionException("DetailsByTransportKey invalid result: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * The Refund web method issues a credit card refund to a customer from a prior transaction reference. The
+     * @param RefundRequest $request
+     * @param PaymentData $paymentData
+     * @return array
+     * @throws TransactionException
+     */
+    public function refundTransaction(RefundRequest $request)
+    {
+        // make the transport
+        $transport = $this->makeTransport($this->config->get('endpoints.reporting'));
+        $payload = [
+            'Credentials' => $this->merchantCredentials->toArray(),
+            'Request' => $request->toArray(),
         ];
 
         // make the transport and send
