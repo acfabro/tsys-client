@@ -158,32 +158,33 @@ class Client implements ClientInterface
      * @return array
      * @throws TransactionException
      */
-    public function refundTransaction(RefundRequest $request)
+    public function refundTransaction(PaymentData $paymentData, RefundRequest $request)
     {
         // make the transport
-        $transport = $this->makeTransport($this->config->get('endpoints.reporting'));
+        $transport = $this->makeTransport($this->config->get('endpoints.credit'));
         $payload = [
             'Credentials' => $this->merchantCredentials->toArray(),
+            'PaymentData' => $paymentData->toArray(),
             'Request' => $request->toArray(),
         ];
 
         // make the transport and send
-        $this->log('debug', "Calling DetailsByTransportKey: " . var_export($payload, true));
+        $this->log('debug', "Calling Refund: " . var_export($payload, true));
         try {
-            $result = $transport->call('DetailsByTransportKey', $payload);
+            $result = $transport->call('Refund', $payload);
             if (!empty($result->DetailsByTransportKeyResult)) {
-                $this->log('debug', "DetailsByTransportKey request: " . $transport->lastRequest());
-                $this->log('debug', "DetailsByTransportKey: " . $transport->lastResponse());
-                $this->log('debug', "DetailsByTransportKey result: " . var_export($result, true));
+                $this->log('debug', "Refund request: " . $transport->lastRequest());
+                $this->log('debug', "Refund: " . $transport->lastResponse());
+                $this->log('debug', "Refund result: " . var_export($result, true));
                 return (array)$result->DetailsByTransportKeyResult;
             } else {
-                throw new \Exception("DetailsByTransportKey returns invalid response: " . var_export($result, true));
+                throw new \Exception("Refund returns invalid response: " . var_export($result, true));
             }
         } catch (\Exception $e) {
-            $this->log('debug', "DetailsByTransportKey request: " . $transport->lastRequest());
-            $this->log('debug', "DetailsByTransportKey response: " . $transport->lastResponse());
-            $this->log('warning', "DetailsByTransportKey invalid result: " . var_export($result, true));
-            throw new TransactionException("DetailsByTransportKey invalid result: " . $e->getMessage());
+            $this->log('debug', "Refund request: " . $transport->lastRequest());
+            $this->log('debug', "Refund response: " . $transport->lastResponse());
+            $this->log('warning', "Refund invalid result: " . var_export($result, true));
+            throw new TransactionException("Refund invalid result: " . $e->getMessage());
         }
     }
 
